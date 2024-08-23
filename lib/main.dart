@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_journey/pages/dashboard_page.dart';
+import 'package:flutter_journey/pages/login_page.dart';
 import 'pages/splash_page.dart';
 import 'package:flutter/services.dart';
 
@@ -24,9 +26,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashPage(),
+      home: const SplashPage(),
+      routes: {
+        '/dashboard': (context) => const DashboardPage(),
+        '/login': (context) => const LoginPage(),
+      },
     );
   }
 }
