@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_journey/pages/dashboard_page.dart';
 import 'package:flutter_journey/pages/login_page.dart';
+import 'package:flutter_journey/pages/registration_page.dart';
 import 'pages/splash_page.dart';
 import 'package:flutter/services.dart';
 
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/dashboard': (context) => const DashboardPage(),
         '/login': (context) => const LoginPage(),
+        '/registration' : (context) => const RegistrationPage(),
       },
     );
   }
