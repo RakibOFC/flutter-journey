@@ -1,49 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/*class SplashPage extends StatelessWidget {
-  const SplashPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Center(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10.0),
-              child: Image.asset(
-                'assets/images/flutter.png',
-                width: 70.0,
-                height: 70.0,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          const Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 30.0),
-              child: CircularProgressIndicator(
-                color: Colors.blue,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}*/
-
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
   @override
-  _SplashPageState createState() => _SplashPageState();
+  SplashPageState createState() => SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class SplashPageState extends State<SplashPage> {
   static const int splashDelay = 2500;
 
   @override
@@ -59,6 +24,8 @@ class _SplashPageState extends State<SplashPage> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
     final int userId = prefs.getInt('userId') ?? 0;
+
+    if (!mounted) return; // The key change is the if (!mounted) return; line. The mounted property is a boolean that indicates whether the widget is still in the widget tree.
 
     if (isLoggedIn) {
       Navigator.pushReplacementNamed(
