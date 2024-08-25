@@ -9,7 +9,7 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  
+
   String _email = '';
   String _password = '';
 
@@ -63,10 +63,10 @@ class LoginPageState extends State<LoginPage> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/registration');
+                  Navigator.pushNamed(context, '/registration');
                 },
                 child: const Text('Don’t have an account? Register here.'),
-              ),
+              )
             ],
           ),
         ),

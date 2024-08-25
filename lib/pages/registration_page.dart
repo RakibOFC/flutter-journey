@@ -10,48 +10,89 @@ class RegistrationPage extends StatefulWidget {
 class RegistrationPageState extends State<RegistrationPage> {
   final _formKey = GlobalKey<FormState>();
 
-  String _email = '';
+  String _name = '';
+  String _username = '';
   String _password = '';
+  String _phone = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Positioned image aligned to the top center
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 50.0), // Adjust padding as needed
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
-                child: Image.asset(
-                  'assets/images/flutter.png',
-                  width: 70.0,
-                  height: 70.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          // Centered text below the image
-          Align(
-            alignment: Alignment.center,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            key: _formKey,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Text(
-                  'Welcome to the App!',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: Image.asset(
+                    'assets/images/flutter.png',
+                    width: 70.0,
+                    height: 70.0,
+                    fit: BoxFit.cover,
                   ),
+                ),
+                const SizedBox(height: 20),
+                _buildTextFormField(
+                  labelText: 'Name',
+                  onSaved: (value) => _name = value!,
+                ),
+                _buildTextFormField(
+                  labelText: 'Username',
+                  onSaved: (value) => _username = value!,
+                ),
+                _buildTextFormField(
+                  labelText: 'Password',
+                  obscureText: true,
+                  onSaved: (value) => _password = value!,
+                ),
+                _buildTextFormField(
+                  labelText: 'Phone',
+                  onSaved: (value) => _phone = value!,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _register,
+                  child: const Text('Register'),
                 ),
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
+  }
+
+  Widget _buildTextFormField({
+    required String labelText,
+    required FormFieldSetter<String> onSaved,
+    bool obscureText = false,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: TextFormField(
+        decoration: InputDecoration(labelText: labelText),
+        obscureText: obscureText,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your ${labelText.toLowerCase()}';
+          }
+          return null;
+        },
+        onSaved: onSaved,
+      ),
+    );
+  }
+
+  void _register() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registering...')),
+      );
+    }
   }
 }
