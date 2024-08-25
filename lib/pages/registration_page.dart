@@ -18,7 +18,8 @@ class RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+        body: SingleChildScrollView(
+      child: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Form(
@@ -63,7 +64,7 @@ class RegistrationPageState extends State<RegistrationPage> {
           ),
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildTextFormField({
