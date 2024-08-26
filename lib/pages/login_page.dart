@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -93,6 +95,10 @@ class LoginPageState extends State<LoginPage> {
   void _login() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+
+      // Example of logging a value
+      log('Username: $_username');
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Loging...')),
       );
