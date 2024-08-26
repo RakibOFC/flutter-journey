@@ -75,7 +75,10 @@ class RegistrationPageState extends State<RegistrationPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: TextFormField(
-        decoration: InputDecoration(labelText: labelText),
+        decoration: InputDecoration(
+          labelText: labelText,
+          border: const OutlineInputBorder(),
+        ),
         obscureText: obscureText,
         validator: (value) {
           if (value == null || value.isEmpty) {
