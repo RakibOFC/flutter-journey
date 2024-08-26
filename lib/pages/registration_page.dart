@@ -18,53 +18,56 @@ class RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: Image.asset(
-                    'assets/images/flutter.png',
-                    width: 70.0,
-                    height: 70.0,
-                    fit: BoxFit.cover,
-                  ),
+            child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.asset(
+                        'assets/images/flutter.png',
+                        width: 70.0,
+                        height: 70.0,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    _buildTextFormField(
+                      labelText: 'Name',
+                      onSaved: (value) => _name = value!,
+                    ),
+                    _buildTextFormField(
+                      labelText: 'Username',
+                      onSaved: (value) => _username = value!,
+                    ),
+                    _buildTextFormField(
+                      labelText: 'Password',
+                      obscureText: true,
+                      onSaved: (value) => _password = value!,
+                    ),
+                    _buildTextFormField(
+                      labelText: 'Phone',
+                      onSaved: (value) => _phone = value!,
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _register,
+                      child: const Text('Register'),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 20),
-                _buildTextFormField(
-                  labelText: 'Name',
-                  onSaved: (value) => _name = value!,
-                ),
-                _buildTextFormField(
-                  labelText: 'Username',
-                  onSaved: (value) => _username = value!,
-                ),
-                _buildTextFormField(
-                  labelText: 'Password',
-                  obscureText: true,
-                  onSaved: (value) => _password = value!,
-                ),
-                _buildTextFormField(
-                  labelText: 'Phone',
-                  onSaved: (value) => _phone = value!,
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _register,
-                  child: const Text('Register'),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    ));
+        )));
   }
 
   Widget _buildTextFormField({

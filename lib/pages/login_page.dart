@@ -16,16 +16,19 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipRRect(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: Image.asset(
                       'assets/images/flutter.png',
@@ -40,7 +43,8 @@ class LoginPageState extends State<LoginPage> {
                       onSaved: (value) => _username = value!),
                   _buildTextFormField(
                       labelText: 'Password',
-                      onSaved: (value) => _password = value!),
+                      onSaved: (value) => _password = value!,
+                      obscureText: true),
                   const SizedBox(height: 20),
                   ElevatedButton(onPressed: _login, child: const Text('Login')),
                   const SizedBox(
@@ -52,7 +56,8 @@ class LoginPageState extends State<LoginPage> {
                       },
                       child:
                           const Text('Don’t have an account? Register here.')),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -61,7 +66,7 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildTextFormField({
+   Widget _buildTextFormField({
     required String labelText,
     required FormFieldSetter<String> onSaved,
     bool obscureText = false,
