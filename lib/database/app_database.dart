@@ -1,18 +1,31 @@
-import 'package:drift/drift.dart';
-import 'package:drift_flutter/drift_flutter.dart';
-import './model/user_entity.dart';
-import 'dao/task_dao.dart';
+import 'dart:io';
 
+import 'package:drift/drift.dart';
+import 'package:drift/native.dart';
+import 'package:flutter_journey/database/model/db_entities.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+
+// Command
+// $ flutter pub run build_runner build
+// $ dart run build_runner build
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [Users], daos: [TaskDao])
+@DriftDatabase(tables: [User])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase()
-      : super(FlutterQueryExecutor.inDatabaseFolder(
-          path: 'db.sqlite',
-          logStatements: true,
-        ));
+
+  static AppDatabase instance() => AppDatabase();
+
+  AppDatabase() : super(_openConnection());
 
   @override
   int get schemaVersion => 1;
+}
+
+LazyDatabase _openConnection() {
+  return LazyDatabase(() async {
+    final dbFolder = await getApplicationDocumentsDirectory();
+    final file = File(p.join(dbFolder.path, 'db.sqlite'));
+    return NativeDatabase.createInBackground(file);
+  });
 }
