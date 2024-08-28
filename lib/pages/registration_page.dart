@@ -1,7 +1,7 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_journey/database/database_helper.dart';
 import 'package:flutter_journey/database/model/db_entities.dart';
+import 'package:sqflite/sqflite.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -106,7 +106,6 @@ class RegistrationPageState extends State<RegistrationPage> {
   }
 
   Future<void> _performRegistration() async {
-    
     User newUser = User(
       name: _name,
       username: _username,
@@ -117,23 +116,26 @@ class RegistrationPageState extends State<RegistrationPage> {
     try {
       await DatabaseHelper.instance.insertUser(newUser);
 
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registration Successful!')),
-      );
-
-      // Navigate back to the login page after successful registration
       if (mounted) {
-        Navigator.pop(context);
+        _showMessage('Registration Successful!');
+        Navigator.pop(context); // Navigate back to the previous screen
       }
     } catch (e) {
-
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      if (e is DatabaseException && e.isUniqueConstraintError()) {
+        if (mounted) {
+          _showMessage('User already exists with this username.');
+        }
+      } else {
+        if (mounted) {
+          _showMessage('Error: $e');
+        }
+      }
     }
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 }
