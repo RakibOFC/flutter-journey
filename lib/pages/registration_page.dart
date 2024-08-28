@@ -1,4 +1,7 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_journey/database/database_helper.dart';
+import 'package:flutter_journey/database/model/db_entities.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -97,8 +100,39 @@ class RegistrationPageState extends State<RegistrationPage> {
   void _register() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+
+      _performRegistration();
+    }
+  }
+
+  Future<void> _performRegistration() async {
+    
+    User newUser = User(
+      name: _name,
+      username: _username,
+      password: _password,
+      phone: _phone,
+    );
+
+    try {
+      await DatabaseHelper.instance.insertUser(newUser);
+
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registering...')),
+        const SnackBar(content: Text('Registration Successful!')),
+      );
+
+      // Navigate back to the login page after successful registration
+      if (mounted) {
+        Navigator.pop(context);
+      }
+    } catch (e) {
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
       );
     }
   }

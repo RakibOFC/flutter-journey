@@ -1,14 +1,35 @@
-import 'package:drift/drift.dart';
+class User {
+  int? id;
+  String name;
+  String username;
+  String password;
+  String phone;
 
-class User extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get name => text()();
-  TextColumn get username => text()();
-  TextColumn get password => text()();
-  TextColumn get phone => text()();
-  DateTimeColumn get createdAt => dateTime().nullable()();
-  DateTimeColumn get updatedAt => dateTime().nullable()();
+  User({
+    this.id,
+    required this.name,
+    required this.username,
+    required this.password,
+    required this.phone,
+  });
 
-  @override
-  Set<Column> get primaryKey => {id};
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'username': username,
+      'password': password,
+      'phone': phone,
+    };
+  }
+
+  factory User.fromMap(Map<String, dynamic> map) {
+    return User(
+      id: map['id'],
+      name: map['name'],
+      username: map['username'],
+      password: map['password'],
+      phone: map['phone'],
+    );
+  }
 }
