@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_journey/database/database_helper.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -31,33 +33,34 @@ class LoginPageState extends State<LoginPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Image.asset(
-                      'assets/images/flutter.png',
-                      width: 70.0,
-                      height: 70.0,
-                      fit: BoxFit.cover,
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.asset(
+                        'assets/images/flutter.png',
+                        width: 70.0,
+                        height: 70.0,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20.0),
-                  _buildTextFormField(
-                      labelText: 'Username',
-                      onSaved: (value) => _username = value!),
-                  _buildTextFormField(
-                      labelText: 'Password',
-                      onSaved: (value) => _password = value!,
-                      obscureText: true),
-                  const SizedBox(height: 20),
-                  ElevatedButton(onPressed: _login, child: const Text('Login')),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/registration');
-                      },
-                      child:
-                          const Text('Don’t have an account? Register here.')),
+                    const SizedBox(height: 20.0),
+                    _buildTextFormField(
+                        labelText: 'Username',
+                        onSaved: (value) => _username = value!),
+                    _buildTextFormField(
+                        labelText: 'Password',
+                        onSaved: (value) => _password = value!,
+                        obscureText: true),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                        onPressed: _login, child: const Text('Login')),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/registration');
+                        },
+                        child: const Text(
+                            'Don’t have an account? Register here.')),
                   ],
                 ),
               ),
@@ -68,7 +71,7 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-   Widget _buildTextFormField({
+  Widget _buildTextFormField({
     required String labelText,
     required FormFieldSetter<String> onSaved,
     bool obscureText = false,
@@ -96,12 +99,27 @@ class LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      // Example of logging a value
-      log('Username: $_username');
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Loging...')),
-      );
+      _performLogin();
     }
+  }
+
+  Future<void> _performLogin() async {
+    final user = await DatabaseHelper.instance.getUser(_username, _password);
+
+    if (!mounted) return;
+
+    if (user != null) {
+      // Login successful
+      Navigator.pushReplacementNamed(context, '/dashboard',);
+    } else {
+      // Invalid credentials
+      _showMessage('Invalid username or password.');
+    }
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 }

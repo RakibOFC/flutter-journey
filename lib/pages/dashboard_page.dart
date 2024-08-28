@@ -5,13 +5,13 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int userId = ModalRoute.of(context)!.settings.arguments as int;
+    // final int userId = ModalRoute.of(context)!.settings.arguments as int;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
       ),
       body: Center(
-        child: Text('Welcome, User $userId'),
+        child: Text('Welcome, User userId'),
       ),
     );
   }
