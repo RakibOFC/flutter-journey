@@ -3,7 +3,6 @@ import 'package:path/path.dart';
 import '../database/model/db_entities.dart';
 
 class DatabaseHelper {
-  
   static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _database;
 
@@ -51,6 +50,19 @@ class DatabaseHelper {
       where: 'username = ? AND password = ?',
       whereArgs: [username, password],
     );
+
+    if (maps.isNotEmpty) {
+      return User.fromMap(maps.first);
+    } else {
+      return null;
+    }
+  }
+
+  Future<User?> getUserById(int userId) async {
+    final db = await instance.database;
+
+    final List<Map<String, dynamic>> maps =
+        await db.query('users', where: 'id = ?', whereArgs: [userId]);
 
     if (maps.isNotEmpty) {
       return User.fromMap(maps.first);
