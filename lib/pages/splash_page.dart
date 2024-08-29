@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_journey/util/values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends StatefulWidget {
@@ -22,10 +23,11 @@ class SplashPageState extends State<SplashPage> {
 
     // Retrieve shared preference values
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    final int userId = prefs.getInt('userId') ?? 0;
+    final bool isLoggedIn = prefs.getBool(Values.isLoggedInKey) ?? false;
+    final int userId = prefs.getInt(Values.userIdKey) ?? 0;
 
-    if (!mounted) return; // The key change is the if (!mounted) return; line. The mounted property is a boolean that indicates whether the widget is still in the widget tree.
+    // The key change is the if (!mounted) return; line. The mounted property is a boolean that indicates whether the widget is still in the widget tree.
+    if (!mounted) return;
 
     if (isLoggedIn) {
       Navigator.pushReplacementNamed(

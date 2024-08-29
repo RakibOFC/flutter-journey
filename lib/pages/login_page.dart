@@ -1,8 +1,7 @@
-import 'dart:developer';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_journey/database/database_helper.dart';
+import 'package:flutter_journey/util/values.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -104,13 +103,19 @@ class LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _performLogin() async {
+
     final user = await DatabaseHelper.instance.getUser(_username, _password);
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (!mounted) return;
 
     if (user != null) {
       // Login successful
-      Navigator.pushReplacementNamed(context, '/dashboard',);
+      int userId = user.id!;
+      prefs.setBool(Values.isLoggedInKey, true);
+      prefs.setInt(Values.userIdKey, userId);
+
+      Navigator.pushReplacementNamed(context, '/dashboard', arguments: userId);
     } else {
       // Invalid credentials
       _showMessage('Invalid username or password.');
