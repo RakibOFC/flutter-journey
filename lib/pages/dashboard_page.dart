@@ -19,11 +19,19 @@ class DashboardPageState extends State<DashboardPage> {
   final TextEditingController _searchController = TextEditingController();
   late Future<List<SearchResult>> futureShows;
 
+  @override
+  void initState() {
+    super.initState();
+    futureShows = ApiService().fetchShows('');
+  }
+
   void _handleSearch() {
     String searchText = _searchController.text;
     log('SearchText: $searchText');
-    futureShows = ApiService().fetchShows(searchText);
-    logShows();
+    setState(() {
+      futureShows = ApiService().fetchShows(searchText);
+    });
+    // logShows();
   }
 
   void logShows() async {
@@ -32,7 +40,8 @@ class DashboardPageState extends State<DashboardPage> {
 
       shows.map((show) => show.toJson()).toList();
 
-      List<Map<String, dynamic>> jsonList = shows.map((show) => show.toJson()).toList();
+      List<Map<String, dynamic>> jsonList =
+          shows.map((show) => show.toJson()).toList();
 
       // Encode the list of JSON maps to a JSON string
       String jsonString = jsonEncode(jsonList);
@@ -53,8 +62,6 @@ class DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     final int userId = ModalRoute.of(context)!.settings.arguments as int;
-    final List<String> items =
-        List<String>.generate(200, (index) => "Item $index");
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -105,15 +112,37 @@ class DashboardPageState extends State<DashboardPage> {
                 onSearchPressed: _handleSearch,
               ),
             ),
-            SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-              return CardTVShow(
-                index: index,
-              ); /*ListTile(
-                leading: const Icon(Icons.label),
-                title: Text(items[index]),
-              );*/
-            }, childCount: items.length))
+            FutureBuilder<List<SearchResult>>(
+              future: futureShows,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SliverToBoxAdapter(
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else if (snapshot.hasError) {
+                  return SliverToBoxAdapter(
+                    child: Center(child: Text('Error: ${snapshot.error}')),
+                  );
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const SliverToBoxAdapter(
+                    child: Center(child: Text('No results found')),
+                  );
+                } else {
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final show = snapshot.data![index].show;
+                        return CardTVShow(
+                          index: index,
+                          show: show,
+                        );
+                      },
+                      childCount: snapshot.data!.length,
+                    ),
+                  );
+                }
+              },
+            ),
           ],
         ),
       ),
@@ -183,13 +212,14 @@ class _SliverSearchBarDelegate extends SliverPersistentHeaderDelegate {
 
 class CardTVShow extends StatelessWidget {
   final int index;
+  final Show show;
 
-  const CardTVShow({super.key, required this.index});
+  const CardTVShow({super.key, required this.index, required this.show});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
       color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
@@ -207,14 +237,23 @@ class CardTVShow extends StatelessWidget {
                 // Image section
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: Image.asset(
-                    'assets/images/flutter.png', // replace with your image path
-                    width: 80.0,
-                    height: 120.0,
-                    fit: BoxFit.cover,
-                  ),
+                  child: show.image?.medium != null &&
+                          show.image!.medium.isNotEmpty
+                      ? Image.network(
+                          show.image!.medium,
+                          width: 80.0,
+                          height: 120.0,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          'assets/images/flutter.png',
+                          // Replace with your asset image path
+                          width: 80.0,
+                          height: 120.0,
+                          fit: BoxFit.cover,
+                        ),
                 ),
-                SizedBox(width: 10.0),
+                const SizedBox(width: 10.0),
                 // Text section
                 Expanded(
                   child: Column(
@@ -222,7 +261,7 @@ class CardTVShow extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'App Name', // replace with your string
+                        show.name, // replace with your string
                         style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
