@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_journey/database/model/db_entities.dart';
+import 'package:flutter_journey/model/search_result.dart';
+import 'package:flutter_journey/rest/api_service.dart';
 
 import '../database/database_helper.dart';
 
@@ -14,10 +17,31 @@ class DashboardPage extends StatefulWidget {
 
 class DashboardPageState extends State<DashboardPage> {
   final TextEditingController _searchController = TextEditingController();
+  late Future<List<SearchResult>> futureShows;
 
   void _handleSearch() {
     String searchText = _searchController.text;
     log('SearchText: $searchText');
+    futureShows = ApiService().fetchShows(searchText);
+    logShows();
+  }
+
+  void logShows() async {
+    try {
+      List<SearchResult> shows = await futureShows;
+
+      shows.map((show) => show.toJson()).toList();
+
+      List<Map<String, dynamic>> jsonList = shows.map((show) => show.toJson()).toList();
+
+      // Encode the list of JSON maps to a JSON string
+      String jsonString = jsonEncode(jsonList);
+
+      // Log the JSON string
+      log(jsonString);
+    } catch (e) {
+      log("Error logging shows: $e");
+    }
   }
 
   @override
@@ -83,7 +107,7 @@ class DashboardPageState extends State<DashboardPage> {
             ),
             SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-              return CardExample(
+              return CardTVShow(
                 index: index,
               ); /*ListTile(
                 leading: const Icon(Icons.label),
@@ -157,10 +181,10 @@ class _SliverSearchBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-class CardExample extends StatelessWidget {
+class CardTVShow extends StatelessWidget {
   final int index;
 
-  const CardExample({super.key, required this.index});
+  const CardTVShow({super.key, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +224,7 @@ class CardExample extends StatelessWidget {
                       Text(
                         'App Name', // replace with your string
                         style: TextStyle(
-                          fontSize: 13.0,
+                          fontSize: 15.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
@@ -209,7 +233,7 @@ class CardExample extends StatelessWidget {
                       Text(
                         'Placeholder Text', // replace with your string
                         style: TextStyle(
-                          fontSize: 9.0,
+                          fontSize: 11.0,
                           color: Colors.grey,
                         ),
                       ),
@@ -217,7 +241,7 @@ class CardExample extends StatelessWidget {
                       Text(
                         'Genres: S Text', // replace with your string
                         style: TextStyle(
-                          fontSize: 9.0,
+                          fontSize: 11.0,
                           color: Colors.black,
                         ),
                       ),
@@ -225,7 +249,7 @@ class CardExample extends StatelessWidget {
                       Text(
                         'Placeholder Text', // replace with your string
                         style: TextStyle(
-                          fontSize: 9.0,
+                          fontSize: 11.0,
                           color: Colors.black,
                         ),
                       ),
@@ -233,7 +257,7 @@ class CardExample extends StatelessWidget {
                       Text(
                         'Placeholder Text', // replace with your string
                         style: TextStyle(
-                          fontSize: 9.0,
+                          fontSize: 11.0,
                           color: Colors.black,
                         ),
                       ),
@@ -241,7 +265,7 @@ class CardExample extends StatelessWidget {
                       Text(
                         'Schedule: S Text', // replace with your string
                         style: TextStyle(
-                          fontSize: 9.0,
+                          fontSize: 11.0,
                           color: Colors.black,
                         ),
                       ),
