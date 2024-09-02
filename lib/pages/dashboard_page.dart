@@ -131,13 +131,15 @@ class DashboardPageState extends State<DashboardPage> {
                   return SliverList(
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        final show = snapshot.data![index].show;
+                        final originalIndex = index % snapshot.data!.length;
+                        final show = snapshot.data![originalIndex].show;
+
                         return CardTVShow(
                           index: index,
                           show: show,
                         );
                       },
-                      childCount: snapshot.data!.length,
+                      childCount: snapshot.data!.length * 100,
                     ),
                   );
                 }
