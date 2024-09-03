@@ -52,27 +52,6 @@ class Show {
   }
 }
 
-/*class ShowImage {
-  final String medium;
-  final String original;
-
-  ShowImage({required this.medium, required this.original});
-
-  factory ShowImage.fromJson(Map<String, dynamic> json) {
-    return ShowImage(
-      medium: json['medium'],
-      original: json['original'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'medium': medium,
-      'original': original,
-    };
-  }
-}*/
-
 class ShowImage {
   final String medium;
   final String original;

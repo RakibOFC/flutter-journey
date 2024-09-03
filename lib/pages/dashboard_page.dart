@@ -16,13 +16,14 @@ class DashboardPage extends StatefulWidget {
 }
 
 class DashboardPageState extends State<DashboardPage> {
-  final TextEditingController _searchController = TextEditingController();
+  final String defSearchText = "iron";
+  late final TextEditingController _searchController = TextEditingController(text: defSearchText);
   late Future<List<SearchResult>> futureShows;
 
   @override
   void initState() {
     super.initState();
-    futureShows = ApiService().fetchShows('');
+    futureShows = ApiService().fetchShows(defSearchText);
   }
 
   void _handleSearch() {
@@ -41,7 +42,7 @@ class DashboardPageState extends State<DashboardPage> {
       shows.map((show) => show.toJson()).toList();
 
       List<Map<String, dynamic>> jsonList =
-          shows.map((show) => show.toJson()).toList();
+      shows.map((show) => show.toJson()).toList();
 
       // Encode the list of JSON maps to a JSON string
       String jsonString = jsonEncode(jsonList);
@@ -61,7 +62,10 @@ class DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    final int userId = ModalRoute.of(context)!.settings.arguments as int;
+    final int userId = ModalRoute
+        .of(context)!
+        .settings
+        .arguments as int;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -130,7 +134,7 @@ class DashboardPageState extends State<DashboardPage> {
                 } else {
                   return SliverList(
                     delegate: SliverChildBuilderDelegate(
-                      (context, index) {
+                          (context, index) {
                         final originalIndex = index % snapshot.data!.length;
                         final show = snapshot.data![originalIndex].show;
 
@@ -173,8 +177,8 @@ class _SliverSearchBarDelegate extends SliverPersistentHeaderDelegate {
   });
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset,
+      bool overlapsContent) {
     return Container(
       color: Colors.white,
       child: AppBar(
@@ -186,7 +190,7 @@ class _SliverSearchBarDelegate extends SliverPersistentHeaderDelegate {
           decoration: const InputDecoration(
             hintText: 'Search',
             hintStyle:
-                TextStyle(color: Colors.grey, fontWeight: FontWeight.w300),
+            TextStyle(color: Colors.grey, fontWeight: FontWeight.w300),
             border: InputBorder.none,
           ),
         ),
@@ -240,20 +244,20 @@ class CardTVShow extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: show.image?.medium != null &&
-                          show.image!.medium.isNotEmpty
+                      show.image!.medium.isNotEmpty
                       ? Image.network(
-                          show.image!.medium,
-                          width: 80.0,
-                          height: 120.0,
-                          fit: BoxFit.cover,
-                        )
+                    show.image!.medium,
+                    width: 80.0,
+                    height: 120.0,
+                    fit: BoxFit.cover,
+                  )
                       : Image.asset(
-                          'assets/images/flutter.png',
-                          // Replace with your asset image path
-                          width: 80.0,
-                          height: 120.0,
-                          fit: BoxFit.cover,
-                        ),
+                    'assets/images/flutter.png',
+                    // Replace with your asset image path
+                    width: 80.0,
+                    height: 120.0,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 const SizedBox(width: 10.0),
                 // Text section
@@ -264,7 +268,7 @@ class CardTVShow extends StatelessWidget {
                     children: [
                       Text(
                         show.name, // replace with your string
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
