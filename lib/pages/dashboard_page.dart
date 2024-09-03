@@ -17,7 +17,8 @@ class DashboardPage extends StatefulWidget {
 
 class DashboardPageState extends State<DashboardPage> {
   final String defSearchText = "iron";
-  late final TextEditingController _searchController = TextEditingController(text: defSearchText);
+  late final TextEditingController _searchController =
+      TextEditingController(text: defSearchText);
   late Future<List<SearchResult>> futureShows;
 
   @override
@@ -28,11 +29,9 @@ class DashboardPageState extends State<DashboardPage> {
 
   void _handleSearch() {
     String searchText = _searchController.text;
-    log('SearchText: $searchText');
     setState(() {
       futureShows = ApiService().fetchShows(searchText);
     });
-    // logShows();
   }
 
   void logShows() async {
@@ -42,7 +41,7 @@ class DashboardPageState extends State<DashboardPage> {
       shows.map((show) => show.toJson()).toList();
 
       List<Map<String, dynamic>> jsonList =
-      shows.map((show) => show.toJson()).toList();
+          shows.map((show) => show.toJson()).toList();
 
       // Encode the list of JSON maps to a JSON string
       String jsonString = jsonEncode(jsonList);
@@ -62,10 +61,7 @@ class DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    final int userId = ModalRoute
-        .of(context)!
-        .settings
-        .arguments as int;
+    final int userId = ModalRoute.of(context)!.settings.arguments as int;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -134,7 +130,7 @@ class DashboardPageState extends State<DashboardPage> {
                 } else {
                   return SliverList(
                     delegate: SliverChildBuilderDelegate(
-                          (context, index) {
+                      (context, index) {
                         final originalIndex = index % snapshot.data!.length;
                         final show = snapshot.data![originalIndex].show;
 
@@ -177,8 +173,8 @@ class _SliverSearchBarDelegate extends SliverPersistentHeaderDelegate {
   });
 
   @override
-  Widget build(BuildContext context, double shrinkOffset,
-      bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       color: Colors.white,
       child: AppBar(
@@ -190,7 +186,7 @@ class _SliverSearchBarDelegate extends SliverPersistentHeaderDelegate {
           decoration: const InputDecoration(
             hintText: 'Search',
             hintStyle:
-            TextStyle(color: Colors.grey, fontWeight: FontWeight.w300),
+                TextStyle(color: Colors.grey, fontWeight: FontWeight.w300),
             border: InputBorder.none,
           ),
         ),
@@ -224,6 +220,8 @@ class CardTVShow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String genres = show.genres.isNotEmpty ? show.genres.join(', ') : 'N/A';
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
       color: Colors.white,
@@ -244,20 +242,20 @@ class CardTVShow extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: show.image?.medium != null &&
-                      show.image!.medium.isNotEmpty
+                          show.image!.medium.isNotEmpty
                       ? Image.network(
-                    show.image!.medium,
-                    width: 80.0,
-                    height: 120.0,
-                    fit: BoxFit.cover,
-                  )
+                          show.image!.medium,
+                          width: 100.0,
+                          height: 150.0,
+                          fit: BoxFit.cover,
+                        )
                       : Image.asset(
-                    'assets/images/flutter.png',
-                    // Replace with your asset image path
-                    width: 80.0,
-                    height: 120.0,
-                    fit: BoxFit.cover,
-                  ),
+                          'assets/images/flutter.png',
+                          // Replace with your asset image path
+                          width: 100.0,
+                          height: 150.0,
+                          fit: BoxFit.cover,
+                        ),
                 ),
                 const SizedBox(width: 10.0),
                 // Text section
@@ -269,48 +267,50 @@ class CardTVShow extends StatelessWidget {
                       Text(
                         show.name, // replace with your string
                         style: const TextStyle(
-                          fontSize: 15.0,
+                          fontSize: 16.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(height: 4.0),
+                      const SizedBox(height: 2.0),
                       Text(
-                        'Placeholder Text', // replace with your string
-                        style: TextStyle(
-                          fontSize: 11.0,
+                        show.language ?? '-',
+                        style: const TextStyle(
+                          fontSize: 14.0,
                           color: Colors.grey,
                         ),
                       ),
-                      SizedBox(height: 4.0),
+                      const SizedBox(height: 2.0),
                       Text(
-                        'Genres: S Text', // replace with your string
-                        style: TextStyle(
-                          fontSize: 11.0,
+                        'Genres: $genres',
+                        style: const TextStyle(
+                          fontSize: 14.0,
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(height: 4.0),
+                      const SizedBox(height: 2.0),
                       Text(
-                        'Placeholder Text', // replace with your string
-                        style: TextStyle(
-                          fontSize: 11.0,
+                        'Runtime: ${show.runtime != null ? '${show.runtime} min' : 'N/A'}',
+                        style: const TextStyle(
+                          fontSize: 14.0,
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(height: 4.0),
+                      const SizedBox(height: 2.0),
                       Text(
-                        'Placeholder Text', // replace with your string
-                        style: TextStyle(
-                          fontSize: 11.0,
+                        'Premiered: ${show.premiered ?? 'N/A'}',
+                        // replace with your string
+                        style: const TextStyle(
+                          fontSize: 14.0,
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(height: 4.0),
+                      const SizedBox(height: 2.0),
                       Text(
-                        'Schedule: S Text', // replace with your string
+                        'Avg. Rating: ${show.rating.average ?? 'N/A'}',
+                        // replace with your string
                         style: TextStyle(
-                          fontSize: 11.0,
+                          fontSize: 14.0,
                           color: Colors.black,
                         ),
                       ),
