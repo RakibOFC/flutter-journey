@@ -1,12 +1,11 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_journey/database/model/db_entities.dart';
 import 'package:flutter_journey/model/search_result.dart';
 import 'package:flutter_journey/rest/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../database/database_helper.dart';
+import '../util/values.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -34,23 +33,14 @@ class DashboardPageState extends State<DashboardPage> {
     });
   }
 
-  void logShows() async {
-    try {
-      List<SearchResult> shows = await futureShows;
+  void _logout() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove(Values.isLoggedInKey);
+    prefs.remove(Values.userIdKey);
 
-      shows.map((show) => show.toJson()).toList();
+    if (!mounted) return;
 
-      List<Map<String, dynamic>> jsonList =
-          shows.map((show) => show.toJson()).toList();
-
-      // Encode the list of JSON maps to a JSON string
-      String jsonString = jsonEncode(jsonList);
-
-      // Log the JSON string
-      log(jsonString);
-    } catch (e) {
-      log("Error logging shows: $e");
-    }
+    Navigator.pushReplacementNamed(context, '/login');
   }
 
   @override
@@ -101,7 +91,11 @@ class DashboardPageState extends State<DashboardPage> {
                       },
                     ),
                   ),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.logout))
+                  IconButton(
+                      onPressed: () {
+                        _logout();
+                      },
+                      icon: const Icon(Icons.logout))
                 ],
               ),
             ),
@@ -155,7 +149,6 @@ class DashboardPageState extends State<DashboardPage> {
     final User? user = await DatabaseHelper.instance.getUserById(userId);
 
     if (user != null) {
-      log('User ${user.name}');
       return user.name;
     } else {
       return 'App Name'; // Return default value if user is null
@@ -309,7 +302,7 @@ class CardTVShow extends StatelessWidget {
                       Text(
                         'Avg. Rating: ${show.rating.average ?? 'N/A'}',
                         // replace with your string
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14.0,
                           color: Colors.black,
                         ),
