@@ -3,9 +3,10 @@ import 'package:flutter_journey/database/model/db_entities.dart';
 import 'package:flutter_journey/model/search_result.dart';
 import 'package:flutter_journey/rest/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../database/database_helper.dart';
 import '../util/values.dart';
+import '../widgets/card_tv_show.dart';
+import '../widgets/sliver_search_bar_delegate.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -101,7 +102,7 @@ class DashboardPageState extends State<DashboardPage> {
             ),
             SliverPersistentHeader(
               pinned: true,
-              delegate: _SliverSearchBarDelegate(
+              delegate: SliverSearchBarDelegate(
                 searchController: _searchController,
                 onSearchPressed: _handleSearch,
               ),
@@ -153,168 +154,5 @@ class DashboardPageState extends State<DashboardPage> {
     } else {
       return 'App Name'; // Return default value if user is null
     }
-  }
-}
-
-class _SliverSearchBarDelegate extends SliverPersistentHeaderDelegate {
-  final TextEditingController searchController;
-  final VoidCallback onSearchPressed;
-
-  _SliverSearchBarDelegate({
-    required this.searchController,
-    required this.onSearchPressed,
-  });
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      color: Colors.white,
-      child: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        toolbarHeight: 56,
-        title: TextField(
-          controller: searchController,
-          decoration: const InputDecoration(
-            hintText: 'Search',
-            hintStyle:
-                TextStyle(color: Colors.grey, fontWeight: FontWeight.w300),
-            border: InputBorder.none,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: onSearchPressed,
-            icon: const Icon(Icons.search),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  double get maxExtent => 56.0;
-
-  @override
-  double get minExtent => 56.0;
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
-    return true;
-  }
-}
-
-class CardTVShow extends StatelessWidget {
-  final int index;
-  final Show show;
-
-  const CardTVShow({super.key, required this.index, required this.show});
-
-  @override
-  Widget build(BuildContext context) {
-    String genres = show.genres.isNotEmpty ? show.genres.join(', ') : 'N/A';
-
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20.0),
-        child: InkWell(
-          onTap: () {
-            // Handle on tap
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                // Image section
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: show.image?.medium != null &&
-                          show.image!.medium.isNotEmpty
-                      ? Image.network(
-                          show.image!.medium,
-                          width: 100.0,
-                          height: 150.0,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.asset(
-                          'assets/images/flutter.png',
-                          // Replace with your asset image path
-                          width: 100.0,
-                          height: 150.0,
-                          fit: BoxFit.cover,
-                        ),
-                ),
-                const SizedBox(width: 10.0),
-                // Text section
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        show.name, // replace with your string
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(height: 2.0),
-                      Text(
-                        show.language ?? '-',
-                        style: const TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(height: 2.0),
-                      Text(
-                        'Genres: $genres',
-                        style: const TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(height: 2.0),
-                      Text(
-                        'Runtime: ${show.runtime != null ? '${show.runtime} min' : 'N/A'}',
-                        style: const TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(height: 2.0),
-                      Text(
-                        'Premiered: ${show.premiered ?? 'N/A'}',
-                        // replace with your string
-                        style: const TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(height: 2.0),
-                      Text(
-                        'Avg. Rating: ${show.rating.average ?? 'N/A'}',
-                        // replace with your string
-                        style: const TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
