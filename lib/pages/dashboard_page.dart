@@ -62,6 +62,7 @@ class DashboardPageState extends State<DashboardPage> {
             SliverAppBar(
               backgroundColor: Colors.white,
               pinned: false,
+              scrolledUnderElevation: 0.0,
               floating: true,
               title: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,

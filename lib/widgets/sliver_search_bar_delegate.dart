@@ -15,6 +15,7 @@ class SliverSearchBarDelegate extends SliverPersistentHeaderDelegate {
     return Container(
       color: Colors.white,
       child: AppBar(
+        scrolledUnderElevation: 0.0,
         backgroundColor: Colors.white,
         elevation: 0,
         toolbarHeight: 56,
